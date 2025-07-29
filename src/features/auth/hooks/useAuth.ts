@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
+import { API_BASE_URL } from '@env';
 import axios from 'axios';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getTokens } from '../../../shared/utils/tokenUtil';
@@ -8,9 +8,7 @@ export function validateLogin(id: string, password: string): string | null {
   if (!id) return '아이디를 입력하세요.';
   if (!password) return '비밀번호를 입력하세요.';
   return null;
-} 
-
-const API_URL = 'https://dh.porogramr.site/api';
+}
 
 export const useLoginForm = (navigation: NativeStackNavigationProp<any>) => {
   const [id, setId] = useState('');
@@ -47,7 +45,7 @@ export const useLoginForm = (navigation: NativeStackNavigationProp<any>) => {
 export const checkIdDuplicate = async (id: string): Promise<boolean> => {
   try {
     console.log("dupcheck", id);
-    const res = await axios.get(`${API_URL}/users/check/loginId`, {
+    const res = await axios.get(`${API_BASE_URL}/users/check/loginId`, {
       params: { loginId: id }
     });
     console.log('아이디 중복 확인 응답:', res.data);
@@ -60,7 +58,7 @@ export const checkIdDuplicate = async (id: string): Promise<boolean> => {
 
 export const checkNicknameDuplicate = async (nickname: string): Promise<boolean> => {
   try {
-    const res = await axios.get(`${API_URL}/users/check/nickname`, {
+    const res = await axios.get(`${API_BASE_URL}/users/check/nickname`, {
       params: { nickname }
     });
     console.log('닉네임 중복 확인 응답:', res.data);

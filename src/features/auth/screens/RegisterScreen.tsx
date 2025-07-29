@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { checkIdDuplicate, validatePasswordFormat, validatePasswordCheck, validateIdFormat } from '../hooks/useAuth';
+import { checkIdDuplicate } from '../hooks/useAuth';
 import RegisterHeader from '../components/RegisterHeader';
-import NiceAuthModal from '../components/NiceAuthModal';
 import { common } from '../../../shared/styles/commonStyles';
+import { 
+  validatePasswordFormat, 
+  validatePasswordCheck, 
+  validateIdFormat,
+  validateName 
+} from '../utils/validationUtils';
+import {
+  formatTime,
+  formatPhoneNumber,
+  formatVerificationCode,
+  handleSendVerification,
+  handleVerifyCode,
+  resetVerificationState
+} from '../utils/phoneVerificationUtils';
 
 type RegisterScreenProps = {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'Register'>;
@@ -17,6 +30,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
   const [idError, setIdError] = useState('');
@@ -24,15 +39,87 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [passwordCheckError, setPasswordCheckError] = useState('');
   const [idChecked, setIdChecked] = useState(false);
   const [nameError, setNameError] = useState('');
-  const [showNiceAuthModal, setShowNiceAuthModal] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+  const [verificationCodeError, setVerificationCodeError] = useState('');
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
+  const [isVerificationCompleted, setIsVerificationCompleted] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [authData, setAuthData] = useState<{
     name: string;
     phone: string;
-    birth: string;
-    gender: string;
-    ci: string;
-    di: string;
+    code: number;
   } | null>(null);
+
+
+
+  // 인증번호 전송 처리
+  const onSendVerification = async () => {
+    await handleSendVerification(
+      phone,
+      setIsVerificationSent,
+      setCountdown,
+      setPhoneError,
+      timerRef
+    );
+  };
+
+  // 인증번호 확인
+  // 인증번호 확인 처리
+  const onVerifyCode = async () => {
+    await handleVerifyCode(
+      verificationCode,
+      phone,
+      name,
+      setIsVerificationCompleted,
+      setVerificationCodeError,
+      setAuthData
+    );
+  };
+
+  // 전화번호 입력 처리
+  const handlePhoneChange = (text: string) => {
+    try {
+      const formatted = formatPhoneNumber(text);
+      setPhone(formatted);
+      setPhoneError('');
+      
+      // 전화번호가 변경되면 인증 상태 초기화
+      if (isVerificationSent || isVerificationCompleted) {
+        resetVerificationState(
+          setIsVerificationSent,
+          setIsVerificationCompleted,
+          setVerificationCode,
+          setVerificationCodeError,
+          setCountdown,
+          timerRef
+        );
+      }
+    } catch (error) {
+      console.error('전화번호 입력 처리 오류:', error);
+    }
+  };
+
+  // 인증번호 입력 처리
+  const handleVerificationCodeChange = (text: string) => {
+    try {
+      const formatted = formatVerificationCode(text);
+      setVerificationCode(formatted);
+      setVerificationCodeError('');
+    } catch (error) {
+      console.error('인증번호 입력 처리 오류:', error);
+    }
+  };
+
+  // 컴포넌트 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
 
   const handleCheckId = async () => {
     if (!id) {
@@ -105,18 +192,19 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     }
 
     // 이름 검사
-    if (!name) {
-      setNameError('이름을 입력하세요.');
+    const nameError = validateName(name);
+    if (nameError) {
+      setNameError(nameError);
       valid = false;
     } else {
       setNameError('');
     }
 
-    // 본인인증 검사
-    if (!authData) {
-      Alert.alert('본인인증 필요', '휴대폰 본인인증을 완료해주세요.');
-      valid = false;
-    }
+    // 본인인증 검사 (임시로 비활성화)
+    // if (!authData) {
+    //   Alert.alert('본인인증 필요', '휴대폰 본인인증을 완료해주세요.');
+    //   valid = false;
+    // }
 
     // 모든 조건이 맞으면 다음 단계로 진행
     if (valid) {
@@ -124,14 +212,22 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         id,
         password,
         name,
-        phone: authData?.phone ?? '', // 인증된 전화번호 추가
+        phone: phone || '01000000000', 
       });
     }
   };
 
+
+
   return (
     <ScrollView contentContainerStyle={common.container}>
-      <RegisterHeader title="회원가입" step={1} onBack={() => navigation.goBack()} />
+      <RegisterHeader title="회원가입" step={1} onBack={() => {
+        try {
+          navigation.goBack();
+        } catch (error) {
+          console.error('뒤로가기 오류:', error);
+        }
+      }} />
       <Text style={styles.label}><Text style={common.star}>*</Text> 는 필수 입력 사항입니다</Text>
       <View style={styles.formWrapper}>
         {/* 아이디 */}
@@ -191,16 +287,70 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         />
         {!!nameError && <Text style={common.errorMsg}>{nameError}</Text>}
 
-        {/* 휴대폰 인증 */}
+        {/* 휴대폰 인증 (임시로 비활성화) */}
         <Text style={common.label}>휴대폰번호 본인인증 <Text style={common.star}>*</Text></Text>
-        <TouchableOpacity 
-          style={[styles.certButton, authData && styles.certButtonSuccess]} 
-          onPress={() => setShowNiceAuthModal(true)}
-        >
-          <Text style={[styles.certButtonText, authData && styles.certButtonTextSuccess]}>
-            {authData ? '인증완료' : '인증하기'}
-          </Text>
-        </TouchableOpacity>
+        
+        <View style={common.row}>
+          <TextInput
+            style={[common.input, { flex: 1 }]}
+            placeholder="010-1234-5678"
+            value={phone}
+            onChangeText={handlePhoneChange}
+            keyboardType="phone-pad"
+            maxLength={13}
+          />
+          <TouchableOpacity 
+            style={[
+              styles.verifyButton, 
+              isVerificationSent && styles.verifyButtonSent,
+              isVerificationCompleted && styles.verifyButtonSuccess
+            ]} 
+            onPress={onSendVerification}
+            disabled={isVerificationSent && countdown > 0}
+          >
+            <Text style={[
+              styles.verifyButtonText,
+              isVerificationSent && styles.verifyButtonTextSent,
+              isVerificationCompleted && styles.verifyButtonTextSuccess
+            ]}>
+              {isVerificationCompleted ? '인증완료' : isVerificationSent ? '재전송' : '인증번호 전송'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {!!phoneError && <Text style={common.errorMsg}>{phoneError}</Text>}
+        {isVerificationSent && countdown > 0 && (
+          <Text style={styles.timerText}>남은 시간: {formatTime(countdown)}</Text>
+        )}
+
+        {isVerificationSent && (
+          <View style={common.row}>
+            <TextInput
+              style={[common.input, { flex: 1 }]}
+              placeholder="인증번호 6자리 입력"
+              value={verificationCode}
+              onChangeText={handleVerificationCodeChange}
+              keyboardType="numeric"
+              maxLength={6}
+            />
+            <TouchableOpacity 
+              style={[
+                styles.verifyButton,
+                isVerificationCompleted && styles.verifyButtonSuccess
+              ]} 
+              onPress={onVerifyCode}
+              disabled={isVerificationCompleted}
+            >
+              <Text style={[
+                styles.verifyButtonText,
+                isVerificationCompleted && styles.verifyButtonTextSuccess
+              ]}>
+                {isVerificationCompleted ? '인증완료' : '확인'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {!!verificationCodeError && <Text style={common.errorMsg}>{verificationCodeError}</Text>}
+        
         {authData && (
           <Text style={styles.authInfo}>
             인증된 번호: {authData.phone} | {authData.name}
@@ -212,17 +362,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           <Text style={styles.nextButtonText}>다음</Text>
         </TouchableOpacity>
       </View>
-
-      {/* NICE 본인인증 모달 */}
-      <NiceAuthModal
-        visible={showNiceAuthModal}
-        onClose={() => setShowNiceAuthModal(false)}
-        onSuccess={(data) => {
-          setAuthData(data);
-          setShowNiceAuthModal(false);
-          Alert.alert('인증 성공', '본인인증이 완료되었습니다.');
-        }}
-      />
     </ScrollView>
   );
 };
@@ -257,6 +396,43 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
+  },
+  verifyButton: {
+    marginLeft: 8,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#2E1404',
+    borderRadius: 8,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    minWidth: 100,
+    alignItems: 'center',
+  },
+  verifyButtonSent: {
+    backgroundColor: '#f0f0f0',
+    borderColor: '#BDBDBD',
+  },
+  verifyButtonSuccess: {
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+  },
+  verifyButtonText: {
+    color: '#2E1404',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  verifyButtonTextSent: {
+    color: '#BDBDBD',
+  },
+  verifyButtonTextSuccess: {
+    color: '#fff',
+  },
+  timerText: {
+    fontSize: 12,
+    color: '#FF6B6B',
+    marginTop: 4,
+    marginLeft: 4,
+    fontWeight: 'bold',
   },
   certButton: {
     backgroundColor: '#fff',

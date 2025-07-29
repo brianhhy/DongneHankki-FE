@@ -11,7 +11,22 @@ type LogoScreenProps = {
 
 const LogoScreen = ({ navigation }: LogoScreenProps) => {
   useEffect(() => {
-    verifyTokens(navigation);
+    const checkTokens = async () => {
+      try {
+        console.log("LogoScreen: 토큰 검증 시작");
+        await verifyTokens(navigation);
+      } catch (error) {
+        console.error("LogoScreen: 토큰 검증 오류", error);
+        // 오류 발생 시 로그인 화면으로 이동
+        try {
+          navigation.reset({ routes: [{ name: "Login" }] });
+        } catch (navError) {
+          console.error("LogoScreen: 네비게이션 오류", navError);
+        }
+      }
+    };
+
+    checkTokens();
   }, [navigation]);
 
   return (

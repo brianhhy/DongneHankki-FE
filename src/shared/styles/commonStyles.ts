@@ -3,9 +3,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 export const common = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    // flexGrow: 1,
     alignItems: 'stretch',
-    // flex: 1,
     paddingTop: 32,
     paddingHorizontal: 10,
     width: '100%',

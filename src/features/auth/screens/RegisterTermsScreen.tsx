@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking, ActivityIndicator, Alert } from 'react-native';
-import RegisterHeader from '../components/RegisterHeader';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { common } from '../../../shared/styles/commonStyles';
+
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { API_BASE_URL } from '@env';
+import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
+import { common } from '../../../shared/styles/commonStyles';
+import RegisterHeader from '../components/RegisterHeader';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterTerms'>;
 
@@ -63,54 +65,36 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
     if (!requiredChecked) return;
     setLoading(true);
     try {
-      const API_URL = 'https://dh.porogramr.site/api';
       let url = '';
       let payload = {};
-  
-      if (userType === 'owner') {
-        url = `${API_URL}/owners`;
 
-        // payload = {
-        //   id,
-        //   password,
-        //   name,
-        //   phone,
-        //   address,
-        //   addressDetail,
-        //   storeName,
-        // };
+      if (userType === 'owner') {
+        url = `${API_BASE_URL}/owners`;
 
         payload = {
           loginId: id,
           password,
           name,
-          nickname: "123",
+          nickname: nickname,
           phoneNumber: phone,
           storeId: 1,
         };
+
         console.log(payload);
       } else {
-        url = `${API_URL}/customers`;
-
-        // payload = {
-        //   id,
-        //   password,
-        //   name,
-        //   phone,
-        //   nickname
-        // };
+        url = `${API_BASE_URL}/customers`;
 
         payload = {
           loginId: id,
           password,
           name,
-          nickname: "123",
+          nickname: nickname,
           phoneNumber: phone,
         };
         console.log(payload);
 
       }
-  
+
       await axios.post(url, payload);
       navigation.navigate('RegisterComplete');
     } catch (e: any) {
@@ -159,7 +143,7 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
         }}>
           <View style={{ backgroundColor: '#fff', borderRadius: 12, padding: 30, maxWidth: '80%' }}>
             <TouchableOpacity onPress={closeModal} style={{ alignSelf: 'flex-end', marginTop: 8 }}>
-              <Text style={{ color: '#2E1404', fontWeight: 'bold'}}>X</Text>
+              <Text style={{ color: '#2E1404', fontWeight: 'bold' }}>X</Text>
             </TouchableOpacity>
             <Text style={{ fontSize: 16, marginHorizontal: 15 }}>{modalContent}</Text>
           </View>
