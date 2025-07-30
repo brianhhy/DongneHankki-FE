@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'r
 import RegisterHeader from '../components/RegisterHeader';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { common } from '../../../shared/styles/commonStyles';
+import { common } from '../../../shared/styles/commonAuthStyles';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterComplete'>;
 

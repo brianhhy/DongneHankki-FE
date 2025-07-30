@@ -5,7 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
 import { checkIdDuplicate } from '../hooks/useAuth';
 import RegisterHeader from '../components/RegisterHeader';
-import { common } from '../../../shared/styles/commonStyles';
+import { common } from '../../../shared/styles/commonAuthStyles';
 import { 
   validatePasswordFormat, 
   validatePasswordCheck, 
@@ -350,12 +350,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           </View>
         )}
         {!!verificationCodeError && <Text style={common.errorMsg}>{verificationCodeError}</Text>}
-        
-        {authData && (
-          <Text style={styles.authInfo}>
-            인증된 번호: {authData.phone} | {authData.name}
-          </Text>
-        )}
 
         {/* 다음 버튼 */}
         <TouchableOpacity style={styles.nextButton} onPress={onNextPress}>

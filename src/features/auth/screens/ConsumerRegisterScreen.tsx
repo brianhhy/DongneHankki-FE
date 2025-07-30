@@ -5,7 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { checkNicknameDuplicate } from '../hooks/useAuth';
-import { common } from '../../../shared/styles/commonStyles';
+import { common } from '../../../shared/styles/commonAuthStyles';
 
 interface ConsumerRegisterProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'ConsumerRegister'>;

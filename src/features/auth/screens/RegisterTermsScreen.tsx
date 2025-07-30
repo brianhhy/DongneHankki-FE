@@ -6,7 +6,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { API_BASE_URL } from '@env';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { common } from '../../../shared/styles/commonStyles';
+import { common } from '../../../shared/styles/commonAuthStyles';
 import RegisterHeader from '../components/RegisterHeader';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterTerms'>;
@@ -64,12 +64,15 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
   const handleRegister = async () => {
     if (!requiredChecked) return;
     setLoading(true);
+    
+    console.log('API_BASE_URL:', API_BASE_URL);
+    
     try {
       let url = '';
       let payload = {};
 
       if (userType === 'owner') {
-        url = `${API_BASE_URL}/owners`;
+        url = `${API_BASE_URL}/api/owners`;
 
         payload = {
           loginId: id,
@@ -80,9 +83,14 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
           storeId: 1,
         };
 
-        console.log(payload);
+        console.log('Owner 회원가입 요청:', {
+          url,
+          payload,
+          payloadType: typeof payload,
+          phoneType: typeof phone
+        });
       } else {
-        url = `${API_BASE_URL}/customers`;
+        url = `${API_BASE_URL}/api/customers`;
 
         payload = {
           loginId: id,
@@ -91,15 +99,40 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
           nickname: nickname,
           phoneNumber: phone,
         };
-        console.log(payload);
-
+        console.log('Customer 회원가입 요청:', {
+          url,
+          payload,
+          payloadType: typeof payload,
+          phoneType: typeof phone
+        });
       }
 
-      await axios.post(url, payload);
+      const response = await axios.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 10000,
+      });
+      
+      console.log('회원가입 성공:', response.data);
       navigation.navigate('RegisterComplete');
     } catch (e: any) {
-      Alert.alert('회원가입 실패', e?.response?.data?.message || '오류가 발생했습니다.');
-      console.error('회원가입 실패:', e.response?.data || e.message);
+      console.error('회원가입 실패 상세:', {
+        message: e.message,
+        status: e.response?.status,
+        statusText: e.response?.statusText,
+        data: e.response?.data,
+        headers: e.response?.headers,
+        config: {
+          url: e.config?.url,
+          method: e.config?.method,
+          data: e.config?.data,
+          headers: e.config?.headers,
+        }
+      });
+      
+      const errorMessage = e?.response?.data?.message || e?.response?.data?.error || e?.message || '오류가 발생했습니다.';
+      Alert.alert('회원가입 실패', errorMessage);
     } finally {
       setLoading(false);
     }

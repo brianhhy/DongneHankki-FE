@@ -5,7 +5,7 @@ import PostcodeSearchModal from '../components/PostcodeSearchModal';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { common } from '../../../shared/styles/commonStyles';
+import { common } from '../../../shared/styles/commonAuthStyles';
 
 interface OwnerRegisterScreenProps {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'OwnerRegister'>;
