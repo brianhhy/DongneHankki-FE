@@ -1,4 +1,10 @@
 {
   "name": "DongnaeHankki",
-  "displayName": "DongnaeHankki"
+  "displayName": "DongnaeHankki",
+  "expo": {
+    "jsEngine": "hermes",
+    "experimental": {
+      "fabric": false
+    }
+  }
 }
