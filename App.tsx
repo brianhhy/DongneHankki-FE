@@ -1,11 +1,11 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigator from './src/navigation/AuthNavigator';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AppNavigator from './src/navigation/AppNavigator';
 
 const App = () => (
-  <NavigationContainer>
-    <AuthNavigator />
-  </NavigationContainer>
+  <GestureHandlerRootView style={{ flex: 1 }}>
+    <AppNavigator />
+  </GestureHandlerRootView>
 );
 
 export default App;
