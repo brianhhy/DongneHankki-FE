@@ -3,7 +3,7 @@ import { ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { checkIdDuplicate } from '../hooks/useAuth';
+import { checkIdDuplicate } from '../services/CheckLoginIdAPI';
 import RegisterHeader from '../components/RegisterHeader';
 import { common } from '../../../shared/styles/commonAuthStyles';
 import { 

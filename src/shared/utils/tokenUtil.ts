@@ -2,7 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-const URL = 'https://dh.porogramr.site/api';
+import { API_BASE_URL } from '@env';
+import { getRoleFromToken, getUserIdFromToken } from './jwtUtil';
+import { useAuthStore } from '../store/authStore';
+
+const URL = `${API_BASE_URL}/api`;
 
 const showToast = (text: string) =>{
     Toast.show({
@@ -10,6 +14,41 @@ const showToast = (text: string) =>{
         position: 'bottom',
         text1: text,
       });
+};
+
+export const saveTokens = async (accessToken: string, refreshToken: string, loginId?: string): Promise<void> => {
+  try {
+
+    const role = getRoleFromToken(accessToken);
+    const userId = getUserIdFromToken(accessToken);
+    
+    console.log('디코드된 정보:', { role, userId });
+    
+    // Zustand store에 정보 저장
+    if (role && userId) {
+      useAuthStore.getState().setAuth({
+        role,
+        userId,
+        loginId: loginId || '', // loginId 추가
+        accessToken,
+        refreshToken,
+      });
+    }
+    
+    await AsyncStorage.setItem(
+      'Tokens',
+      JSON.stringify({
+        accessToken,
+        refreshToken,
+        role,
+        userId,
+      }),
+    );
+    console.log('토큰 저장 완료');
+  } catch (error: any) {
+    console.error('토큰 저장 실패:', error.message);
+    throw new Error('토큰 저장에 실패했습니다.');
+  }
 };
 
 export const getTokens = async (
@@ -30,13 +69,7 @@ export const getTokens = async (
         throw new Error("토큰이 없습니다.");
       }
 
-      await AsyncStorage.setItem(
-        'Tokens',
-        JSON.stringify({
-          accessToken: res.data.data.accessToken,
-          refreshToken: res.data.data.refreshToken,
-        }),
-      );
+      await saveTokens(accessToken, refreshToken);
     } else {
       throw new Error(res.data.message || '로그인에 실패했습니다.');
     }
@@ -49,10 +82,12 @@ export const getTokens = async (
   }
 };
 
-const getTokenFromLocal = async (): Promise<{
+export const getTokenFromLocal = async (): Promise<{
   accessToken: string;
   refreshToken: string;
-  userId: string;
+  userId?: string;
+  loginId?: string;
+  role?: 'owner' | 'customer';
 } | null> => {
   try {
     console.log("GETTOKEN 시작");
@@ -76,6 +111,17 @@ const getTokenFromLocal = async (): Promise<{
       return null;
     }
 
+    // Zustand store에 정보 저장
+    if (parsedToken.role && parsedToken.userId) {
+      useAuthStore.getState().setAuth({
+        role: parsedToken.role,
+        userId: parsedToken.userId,
+        loginId: parsedToken.loginId || '', // loginId 추가
+        accessToken: parsedToken.accessToken,
+        refreshToken: parsedToken.refreshToken,
+      });
+    }
+
     console.log("토큰 로드 성공");
     return parsedToken;
     
@@ -85,6 +131,23 @@ const getTokenFromLocal = async (): Promise<{
   }
 };
 
+
+export const logout = async (navigation: NativeStackNavigationProp<any>) => {
+  try {
+    // AsyncStorage에서 토큰 삭제
+    await AsyncStorage.removeItem('Tokens');
+    
+    // Zustand store 초기화
+    useAuthStore.getState().clearAuth();
+    
+    console.log('로그아웃 완료');
+    
+    // 로그인 화면으로 이동
+    navigation.reset({ routes: [{ name: "Login" }] });
+  } catch (error: any) {
+    console.error('로그아웃 실패:', error.message);
+  }
+};
 
 export const verifyTokens = async (
   navigation: NativeStackNavigationProp<any>
@@ -126,14 +189,23 @@ export const verifyTokens = async (
       
       // accessToken 만료, refreshToken 정상 -> 재발급된 accessToken 저장 후 자동 로그인
       if (res.data && res.data.data && res.data.data.accessToken) {
+        const newAccessToken = res.data.data.accessToken;
+        
+        // Zustand store 업데이트
+        useAuthStore.getState().setTokens({
+          accessToken: newAccessToken,
+          refreshToken: Token.refreshToken,
+        });
+        
         await AsyncStorage.setItem('Tokens', JSON.stringify({
           ...Token,
-          'accessToken': res.data.data.accessToken,
+          'accessToken': newAccessToken,
         }));
         console.log("새 토큰 저장 완료");
       }
       
-      navigation.reset({ routes: [{ name: "RegisterComplete" }] });
+      // AppNavigator에서 자동으로 처리하므로 네비게이션 제거
+      // navigation.reset({ routes: [{ name: "Customer" }] });
 
     } catch (error: any) {
       console.log("토큰 검증 실패:", error.message);
@@ -144,19 +216,23 @@ export const verifyTokens = async (
       // accessToken 만료, refreshToken 만료 -> 로그인 페이지
       if (code === 401 || status === 401) {
         console.log("인증 실패 - 로그인 화면으로 이동");
+        useAuthStore.getState().clearAuth();
         navigation.reset({ routes: [{ name: "Login" }] });
       }
       // 네트워크 오류나 기타 오류 -> 로그인 페이지로 이동
       else {
         console.log("기타 오류 - 로그인 화면으로 이동");
+        useAuthStore.getState().clearAuth();
         navigation.reset({ routes: [{ name: "Login" }] });
       }
     }
 
   } catch (error: any) {
     console.error("verifyTokens 전체 오류:", error.message);
+    
     // 오류 발생 시 로그인 화면으로 이동
     try {
+      useAuthStore.getState().clearAuth();
       navigation.reset({ routes: [{ name: "Login" }] });
     } catch (navError) {
       console.error("네비게이션 오류:", navError);
