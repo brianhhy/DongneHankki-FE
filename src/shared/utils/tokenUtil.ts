@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Keychain from 'react-native-keychain';
 import axios from "axios";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,6 +8,15 @@ import { useAuthStore } from '../store/authStore';
 
 const URL = `${API_BASE_URL}/api`;
 
+// Keychain 키 상수
+const KEYCHAIN_KEYS = {
+  ACCESS_TOKEN: 'dongnaehankki_access_token',
+  REFRESH_TOKEN: 'dongnaehankki_refresh_token',
+  USER_ID: 'dongnaehankki_user_id',
+  LOGIN_ID: 'dongnaehankki_login_id',
+  ROLE: 'dongnaehankki_role',
+} as const;
+
 const showToast = (text: string) =>{
     Toast.show({
         type: 'error',
@@ -16,9 +25,102 @@ const showToast = (text: string) =>{
       });
 };
 
+// Keychain에 데이터 저장
+const saveToKeychain = async (key: string, value: string): Promise<void> => {
+  try {
+    console.log(`Keychain 저장 시작 - 키: ${key}, 값 길이: ${value.length}`);
+    await Keychain.setGenericPassword(key, value);
+    console.log(`Keychain 저장 성공 - 키: ${key}`);
+  } catch (error) {
+    console.error(`Keychain 저장 실패 (${key}):`, error);
+    throw new Error(`Keychain 저장에 실패했습니다: ${key}`);
+  }
+};
+
+// Keychain에서 데이터 조회
+const getFromKeychain = async (key: string): Promise<string | null> => {
+  try {
+    console.log(`Keychain 조회 시작 - 키: ${key}`);
+    
+    // 모든 저장된 credentials 조회
+    const credentials = await Keychain.getAllGenericPasswordServices();
+    console.log(`Keychain에 저장된 모든 서비스:`, credentials);
+    
+    // 특정 키로 데이터 조회
+    const result = await Keychain.getGenericPassword();
+    console.log(`Keychain 조회 결과 - 키: ${key}, result 존재: ${!!result}`);
+    
+    if (result && result.username === key && result.password) {
+      console.log(`Keychain 조회 성공 - 키: ${key}, 값 길이: ${result.password.length}`);
+      return result.password;
+    }
+    
+    console.log(`Keychain 조회 실패 - 키: ${key}, 일치하는 데이터 없음`);
+    return null;
+  } catch (error) {
+    console.error(`Keychain 조회 실패 (${key}):`, error);
+    return null;
+  }
+};
+
+// Keychain에서 데이터 삭제
+const removeFromKeychain = async (key: string): Promise<void> => {
+  try {
+    console.log(`Keychain 삭제 시작 - 키: ${key}`);
+    await Keychain.resetGenericPassword({ service: key });
+    console.log(`Keychain 삭제 성공 - 키: ${key}`);
+  } catch (error) {
+    console.error(`Keychain 삭제 실패 (${key}):`, error);
+  }
+};
+
+// 모든 토큰 데이터를 하나의 객체로 저장
+const saveAllTokensToKeychain = async (tokenData: {
+  accessToken: string;
+  refreshToken: string;
+  userId: string;
+  loginId: string;
+  role: string;
+}): Promise<void> => {
+  try {
+    console.log('모든 토큰 데이터를 Keychain에 저장 시작');
+    const tokenJson = JSON.stringify(tokenData);
+    await Keychain.setGenericPassword('dongnaehankki_tokens', tokenJson);
+    console.log('모든 토큰 데이터 Keychain 저장 완료');
+  } catch (error) {
+    console.error('토큰 데이터 저장 실패:', error);
+    throw new Error('토큰 데이터 저장에 실패했습니다.');
+  }
+};
+
+// Keychain에서 모든 토큰 데이터 조회
+const getAllTokensFromKeychain = async (): Promise<{
+  accessToken: string;
+  refreshToken: string;
+  userId: string;
+  loginId: string;
+  role: string;
+} | null> => {
+  try {
+    console.log('Keychain에서 모든 토큰 데이터 조회 시작');
+    const result = await Keychain.getGenericPassword();
+    
+    if (result && result.username === 'dongnaehankki_tokens' && result.password) {
+      const tokenData = JSON.parse(result.password);
+      console.log('Keychain에서 토큰 데이터 조회 성공');
+      return tokenData;
+    }
+    
+    console.log('Keychain에 토큰 데이터 없음');
+    return null;
+  } catch (error) {
+    console.error('토큰 데이터 조회 실패:', error);
+    return null;
+  }
+};
+
 export const saveTokens = async (accessToken: string, refreshToken: string, loginId?: string): Promise<void> => {
   try {
-
     const role = getRoleFromToken(accessToken);
     const userId = getUserIdFromToken(accessToken);
     
@@ -29,22 +131,22 @@ export const saveTokens = async (accessToken: string, refreshToken: string, logi
       useAuthStore.getState().setAuth({
         role,
         userId,
-        loginId: loginId || '', // loginId 추가
+        loginId: loginId || '',
         accessToken,
         refreshToken,
       });
     }
     
-    await AsyncStorage.setItem(
-      'Tokens',
-      JSON.stringify({
-        accessToken,
-        refreshToken,
-        role,
-        userId,
-      }),
-    );
-    console.log('토큰 저장 완료');
+    // 모든 토큰 데이터를 하나의 객체로 Keychain에 저장
+    await saveAllTokensToKeychain({
+      accessToken,
+      refreshToken,
+      userId: userId ? String(userId) : '',
+      loginId: loginId || '',
+      role: role || '',
+    });
+    
+    console.log('토큰 Keychain 저장 완료');
   } catch (error: any) {
     console.error('토큰 저장 실패:', error.message);
     throw new Error('토큰 저장에 실패했습니다.');
@@ -69,7 +171,7 @@ export const getTokens = async (
         throw new Error("토큰이 없습니다.");
       }
 
-      await saveTokens(accessToken, refreshToken);
+      await saveTokens(accessToken, refreshToken, id);
     } else {
       throw new Error(res.data.message || '로그인에 실패했습니다.');
     }
@@ -90,40 +192,47 @@ export const getTokenFromLocal = async (): Promise<{
   role?: 'owner' | 'customer';
 } | null> => {
   try {
-    console.log("GETTOKEN 시작");
-    const value = await AsyncStorage.getItem("Tokens");
+    console.log("=== GETTOKEN 시작 ===");
     
-    if (value === null || value === undefined) {
-      console.log("저장된 토큰 없음");
+    // Keychain에서 모든 토큰 데이터 조회
+    const tokenData = await getAllTokensFromKeychain();
+    
+    if (!tokenData || !tokenData.accessToken || !tokenData.refreshToken) {
+      console.log("저장된 토큰 없음 - accessToken 또는 refreshToken이 없음");
       return null;
     }
 
-    const parsedToken = JSON.parse(value);
-    
-    // 토큰 구조 검증
-    if (!parsedToken || typeof parsedToken !== 'object') {
-      console.log("토큰이 객체가 아님");
-      return null;
-    }
+    const result = {
+      accessToken: tokenData.accessToken,
+      refreshToken: tokenData.refreshToken,
+      userId: tokenData.userId || undefined,
+      loginId: tokenData.loginId || undefined,
+      role: tokenData.role as 'owner' | 'customer' | undefined,
+    };
 
-    if (!parsedToken.accessToken || !parsedToken.refreshToken) {
-      console.log("토큰 필드 누락");
-      return null;
-    }
+    console.log("토큰 데이터 구성 완료:", {
+      hasUserId: !!result.userId,
+      hasLoginId: !!result.loginId,
+      hasRole: !!result.role,
+      role: result.role
+    });
 
     // Zustand store에 정보 저장
-    if (parsedToken.role && parsedToken.userId) {
+    if (result.role && result.userId) {
+      console.log("Zustand store에 인증 정보 저장");
       useAuthStore.getState().setAuth({
-        role: parsedToken.role,
-        userId: parsedToken.userId,
-        loginId: parsedToken.loginId || '', // loginId 추가
-        accessToken: parsedToken.accessToken,
-        refreshToken: parsedToken.refreshToken,
+        role: result.role,
+        userId: result.userId,
+        loginId: result.loginId || '',
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
       });
+    } else {
+      console.log("Zustand store 저장 건너뜀 - role 또는 userId 없음");
     }
 
     console.log("토큰 로드 성공");
-    return parsedToken;
+    return result;
     
   } catch (e: any) {
     console.error("토큰 로드 오류:", e.message);
@@ -131,11 +240,13 @@ export const getTokenFromLocal = async (): Promise<{
   }
 };
 
-
 export const logout = async (navigation: NativeStackNavigationProp<any>) => {
   try {
-    // AsyncStorage에서 토큰 삭제
-    await AsyncStorage.removeItem('Tokens');
+    console.log('로그아웃 시작 - Keychain 데이터 삭제');
+    
+    // 모든 Keychain 데이터 삭제
+    await Keychain.resetGenericPassword();
+    console.log('모든 Keychain 데이터 삭제 완료');
     
     // Zustand store 초기화
     useAuthStore.getState().clearAuth();
@@ -143,7 +254,7 @@ export const logout = async (navigation: NativeStackNavigationProp<any>) => {
     console.log('로그아웃 완료');
     
     // 로그인 화면으로 이동
-    navigation.reset({ routes: [{ name: "Login" }] });
+    navigation.reset({ routes: [{ name: "Auth" }] });
   } catch (error: any) {
     console.error('로그아웃 실패:', error.message);
   }
@@ -197,10 +308,8 @@ export const verifyTokens = async (
           refreshToken: Token.refreshToken,
         });
         
-        await AsyncStorage.setItem('Tokens', JSON.stringify({
-          ...Token,
-          'accessToken': newAccessToken,
-        }));
+        // Keychain에 새 accessToken 저장
+        await saveToKeychain(KEYCHAIN_KEYS.ACCESS_TOKEN, newAccessToken);
         console.log("새 토큰 저장 완료");
       }
       
