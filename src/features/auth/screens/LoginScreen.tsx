@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { useLoginForm } from '../hooks/useAuth';
+import { useLogin } from '../hooks/useLogin';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'Login'>;
@@ -15,8 +15,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     password, setPassword,
     showPassword, setShowPassword,
     error,
+    isLoading,
     onLoginPress,
-  } = useLoginForm(navigation);
+  } = useLogin(navigation);
 
   return (
     <View style={styles.container}>
@@ -46,8 +47,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         </View>
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <Text style={styles.forgotText}>아이디/비밀번호를 잊으셨나요?</Text>
-        <TouchableOpacity style={styles.loginButton} onPress={onLoginPress}>
-          <Text style={styles.loginButtonText}>로그인</Text>
+        <TouchableOpacity 
+          style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
+          onPress={onLoginPress}
+          disabled={isLoading}
+        >
+          <Text style={styles.loginButtonText}>
+            {isLoading ? '로그인 중...' : '로그인'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -131,6 +138,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  loginButtonDisabled: {
+    backgroundColor: '#ccc',
   },
   error: {
     color: 'red',

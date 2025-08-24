@@ -1,0 +1,89 @@
+import { useState } from 'react';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { signupAPI, SignupRequest } from '../services/SignupAPI';
+
+export interface SignupFormData {
+  id: string;
+  password: string;
+  name: string;
+  phone: string;
+  userType: 'owner' | 'consumer';
+  nickname?: string;
+  address?: string;
+  addressDetail?: string;
+  storeName?: string;
+}
+
+export function validateSignup(data: SignupFormData): string | null {
+  if (!data.id) return '아이디를 입력하세요.';
+  if (!data.password) return '비밀번호를 입력하세요.';
+  if (!data.name) return '이름을 입력하세요.';
+  if (!data.phone) return '전화번호를 입력하세요.';
+  if (!data.nickname) return '닉네임을 입력하세요.';
+  if (data.userType === 'owner' && !data.storeName) return '가게명을 입력하세요.';
+  return null;
+}
+
+export const useSignup = (navigation: NativeStackNavigationProp<any>) => {
+  const [formData, setFormData] = useState<SignupFormData>({
+    id: '',
+    password: '',
+    name: '',
+    phone: '',
+    userType: 'consumer',
+    nickname: '',
+    address: '',
+    addressDetail: '',
+    storeName: '',
+  });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const updateFormData = (field: keyof SignupFormData, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const onSignupPress = async () => {
+    const err = validateSignup(formData);
+    if (err) {
+      setError(err);
+      return;
+    }
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const signupData: SignupRequest = {
+        loginId: formData.id,
+        password: formData.password,
+        name: formData.name,
+        nickname: formData.nickname || '',
+        phoneNumber: formData.phone,
+        ...(formData.userType === 'owner' && { storeId: 1 }), // owner인 경우 storeId 추가
+      };
+
+      const response = await signupAPI(signupData, formData.userType);
+      
+      if (response.status === 'success') {
+        navigation.navigate('RegisterComplete');
+      } else {
+        throw new Error(response.message || '회원가입에 실패했습니다.');
+      }
+    } catch (e: any) {
+      setError(e.message || '회원가입 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    formData,
+    updateFormData,
+    error,
+    isLoading,
+    onSignupPress,
+  };
+}; 

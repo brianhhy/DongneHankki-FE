@@ -9,6 +9,34 @@ PODS:
   - hermes-engine (0.79.3):
     - hermes-engine/Pre-built (= 0.79.3)
   - hermes-engine/Pre-built (0.79.3)
+  - mj-studio-react-native-naver-map (2.5.3):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - NMapsMap (= 3.21.0)
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - NMapsGeometry (1.0.2)
+  - NMapsMap (3.21.0):
+    - NMapsGeometry
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1333,6 +1361,8 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
+  - react-native-geolocation-service (5.3.1):
+    - React
   - react-native-maps (1.24.3):
     - react-native-maps/Maps (= 1.24.3)
   - react-native-maps/Generated (1.24.3):
@@ -1832,6 +1862,178 @@ PODS:
   - RNCCheckbox (0.5.20):
     - BEMCheckBox (~> 1.4)
     - React-Core
+  - RNGestureHandler (2.27.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNKeychain (10.0.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNReanimated (3.19.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNReanimated/reanimated (= 3.19.1)
+    - RNReanimated/worklets (= 3.19.1)
+    - Yoga
+  - RNReanimated/reanimated (3.19.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNReanimated/reanimated/apple (= 3.19.1)
+    - Yoga
+  - RNReanimated/reanimated/apple (3.19.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNReanimated/worklets (3.19.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNReanimated/worklets/apple (= 3.19.1)
+    - Yoga
+  - RNReanimated/worklets/apple (3.19.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (4.11.1):
     - DoubleConversion
     - glog
@@ -1918,6 +2120,7 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - "mj-studio-react-native-naver-map (from `../node_modules/@mj-studio/react-native-naver-map`)"
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1951,6 +2154,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1987,6 +2191,9 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1994,6 +2201,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - BEMCheckBox
+    - NMapsGeometry
+    - NMapsMap
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2012,6 +2221,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2025-06-04-RNv0.79.3-7f9a871eefeb2c3852365ee80f0b6733ec12ac3b
+  mj-studio-react-native-naver-map:
+    :path: "../node_modules/@mj-studio/react-native-naver-map"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -2074,6 +2285,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
@@ -2146,6 +2359,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCCheckbox:
     :path: "../node_modules/@react-native-community/checkbox"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -2162,6 +2381,9 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 94ed01537bdeccaab1adbf94b040d115d6fa1a7f
+  mj-studio-react-native-naver-map: 4485f20b12bdbdb7fc5900335efc2d0ee99f3951
+  NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
+  NMapsMap: 8e7e35c2446e7c4a88d6dd0d64aa0d1de903e4f0
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: c3e3f5b4ea83e7ff3bc86ce09e2a54b7affd687d
   RCTRequired: ee438439880dffc9425930d1dd1a3c883ee6879c
@@ -2193,6 +2415,7 @@ SPEC CHECKSUMS:
   React-logger: 514fac028fee60c84591f951c7c04ba1c5023334
   React-Mapbuffer: fae8da2c01aeb7f26ad739731b6dba61fd02fd97
   React-microtasksnativemodule: 20454ffccff553f0ee73fd20873aa8555a5867fb
+  react-native-geolocation-service: 32b2c2a3b91e70ce2a8d0c684801aaeb0a07e0ec
   react-native-maps: a48f905ccf2048f130c0a55996880d479299bc1c
   react-native-safe-area-context: 5594ec631ede9c311c5c0efa244228eff845ce88
   react-native-webview: 85c8fc8ca09f4e67b68afbc86207a1442af5dc80
@@ -2229,11 +2452,14 @@ SPEC CHECKSUMS:
   ReactCommon: e243aa261effc83c10208f0794bade55ca9ae5b6
   RNCAsyncStorage: a1c8cc8a99c32de1244a9cf707bf9d83d0de0f71
   RNCCheckbox: 33b44487ca8008394ce658cc32b26eab04f426ef
+  RNGestureHandler: 9205e0a9649ef6fcfd71e86992ecfb21eefab3d3
+  RNKeychain: 943b4dbceef4b3a310c9122c99d1e5b0bd66b9f3
+  RNReanimated: 730ffe6cf7b931f78b795e6b6e0920dcab9c8beb
   RNScreens: 482e9707f9826230810c92e765751af53826d509
   RNVectorIcons: 941a39b5d3b9d8cf8ac2e2fc09b07bfafbcf9796
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 29f74a5b77dca8c37669e1e1e867e5f4e12407df
 
-PODFILE CHECKSUM: 2cc324812d11a7f353e8504fa55052ec9a2e5f03
+PODFILE CHECKSUM: 34bfcc3e0c7657824d0d980d1a605e30bd92af51
 
 COCOAPODS: 1.16.2

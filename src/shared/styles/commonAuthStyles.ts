@@ -1,14 +1,14 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { globalTextStyles, FONTS } from './globalStyles';
 
 export const common = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    // flexGrow: 1,
     alignItems: 'stretch',
-    // flex: 1,
     paddingTop: 32,
     paddingHorizontal: 10,
     width: '100%',
+    minHeight: '100%',
   },
   contentWrapper: {
     paddingHorizontal: 24,
@@ -20,11 +20,10 @@ export const common = StyleSheet.create({
     paddingHorizontal: 24,
     flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   subtitle: {
-    fontSize: 30,
-    color: '#222',
+    ...globalTextStyles.heading1,
     textAlign: 'center',
     marginBottom: 48,
     fontWeight: '400'
@@ -35,29 +34,32 @@ export const common = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     height: 56,
-    marginTop: 5,
+    marginTop: 0,
+    marginBottom: 5,
+    fontFamily: FONTS.regular,
   },
   brownButton: {
     width: '100%',
     backgroundColor: '#2E1404',
     borderRadius: 15,
-    paddingVertical: 16,
+    paddingVertical: 20,
     alignItems: 'center',
     marginTop: 16,
-    height: 66,
+    height: 80,
     justifyContent: 'center',
     marginBottom: 16,
   },
   brownButtonText: {
+    ...globalTextStyles.button,
     color: '#fff',
     fontSize: 25,
-    fontWeight: 'bold',
   },
   errorMsg: {
     color: 'red',
     fontSize: 13,
     marginLeft: 4,
     margin: 0,
+    fontFamily: FONTS.regular,
   },
   star: {
     color: '#FF0000',
@@ -65,7 +67,8 @@ export const common = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 15,
+    marginBottom: 1,
     height: 30,
   },
   row: {

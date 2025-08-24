@@ -5,7 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import RegisterHeader from '../components/RegisterHeader';
-import { common } from '../../../shared/styles/commonStyles';
+import { common } from '../../../shared/styles/commonAuthStyles';
 
 type UserTypeSelectionScreenProps = {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'UserTypeSelection'>;

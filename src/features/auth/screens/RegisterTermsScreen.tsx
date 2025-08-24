@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking, ActivityIndicator, Alert } from 'react-native';
-import RegisterHeader from '../components/RegisterHeader';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { common } from '../../../shared/styles/commonStyles';
+
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { API_BASE_URL } from '@env';
+import type { AuthStackParamList } from '../../../navigation/AuthNavigator';
+import { common } from '../../../shared/styles/commonAuthStyles';
+import RegisterHeader from '../components/RegisterHeader';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterTerms'>;
 
@@ -62,60 +64,75 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
   const handleRegister = async () => {
     if (!requiredChecked) return;
     setLoading(true);
+    
+    console.log('API_BASE_URL:', API_BASE_URL);
+    
     try {
-      const API_URL = 'https://dh.porogramr.site/api';
       let url = '';
       let payload = {};
-  
-      if (userType === 'owner') {
-        url = `${API_URL}/owners`;
 
-        // payload = {
-        //   id,
-        //   password,
-        //   name,
-        //   phone,
-        //   address,
-        //   addressDetail,
-        //   storeName,
-        // };
+      if (userType === 'owner') {
+        url = `${API_BASE_URL}/api/owners`;
 
         payload = {
           loginId: id,
           password,
           name,
-          nickname: "123",
+          nickname: nickname,
           phoneNumber: phone,
           storeId: 1,
         };
-        console.log(payload);
-      } else {
-        url = `${API_URL}/customers`;
 
-        // payload = {
-        //   id,
-        //   password,
-        //   name,
-        //   phone,
-        //   nickname
-        // };
+        console.log('Owner 회원가입 요청:', {
+          url,
+          payload,
+          payloadType: typeof payload,
+          phoneType: typeof phone
+        });
+      } else {
+        url = `${API_BASE_URL}/api/customers`;
 
         payload = {
           loginId: id,
           password,
           name,
-          nickname: "123",
+          nickname: nickname,
           phoneNumber: phone,
         };
-        console.log(payload);
-
+        console.log('Customer 회원가입 요청:', {
+          url,
+          payload,
+          payloadType: typeof payload,
+          phoneType: typeof phone
+        });
       }
-  
-      await axios.post(url, payload);
+
+      const response = await axios.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 10000,
+      });
+      
+      console.log('회원가입 성공:', response.data);
       navigation.navigate('RegisterComplete');
     } catch (e: any) {
-      Alert.alert('회원가입 실패', e?.response?.data?.message || '오류가 발생했습니다.');
-      console.error('회원가입 실패:', e.response?.data || e.message);
+      console.error('회원가입 실패 상세:', {
+        message: e.message,
+        status: e.response?.status,
+        statusText: e.response?.statusText,
+        data: e.response?.data,
+        headers: e.response?.headers,
+        config: {
+          url: e.config?.url,
+          method: e.config?.method,
+          data: e.config?.data,
+          headers: e.config?.headers,
+        }
+      });
+      
+      const errorMessage = e?.response?.data?.message || e?.response?.data?.error || e?.message || '오류가 발생했습니다.';
+      Alert.alert('회원가입 실패', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -159,7 +176,7 @@ const RegisterTerms: React.FC<Props> = ({ route, navigation }) => {
         }}>
           <View style={{ backgroundColor: '#fff', borderRadius: 12, padding: 30, maxWidth: '80%' }}>
             <TouchableOpacity onPress={closeModal} style={{ alignSelf: 'flex-end', marginTop: 8 }}>
-              <Text style={{ color: '#2E1404', fontWeight: 'bold'}}>X</Text>
+              <Text style={{ color: '#2E1404', fontWeight: 'bold' }}>X</Text>
             </TouchableOpacity>
             <Text style={{ fontSize: 16, marginHorizontal: 15 }}>{modalContent}</Text>
           </View>
