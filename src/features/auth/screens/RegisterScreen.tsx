@@ -20,6 +20,7 @@ import {
   handleVerifyCode,
   resetVerificationState
 } from '../utils/phoneVerificationUtils';
+import { globalTextStyles } from '../../../shared/styles/globalStyles';
 
 type RegisterScreenProps = {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'Register'>;
@@ -313,7 +314,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         {/* 인증번호 입력 */}
         <View style={styles.verificationContainer}>
           <TextInput
-            style={[common.input, { flex: 1 }]}
+            style={[common.input, { flex: 1 , marginTop:6}]}
             placeholder="인증번호를 입력해 주세요."
             value={verificationCode}
             onChangeText={handleVerificationCodeChange}
@@ -343,7 +344,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         {isVerificationSent && !isVerificationCompleted && (
           <View style={styles.verificationContainer}>
             <TouchableOpacity 
-              style={[styles.verifyButton, { width: '100%' }]} 
+              style={[styles.verifySuccessButton, { width: '100%' }]} 
               onPress={onVerifyCode}
             >
               <Text style={styles.verifyButtonText}>확인</Text>
@@ -470,6 +471,18 @@ const styles = StyleSheet.create({
     minWidth: 100,
     alignItems: 'center',
   },
+  verifySuccessButton: {
+    marginLeft: 0,
+    marginVertical: 4,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#2E1404',
+    borderRadius: 8,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    minWidth: 100,
+    alignItems: 'center',
+  },
   verifyButtonSent: {
     backgroundColor: '#f0f0f0',
     borderColor: '#BDBDBD',
@@ -482,6 +495,7 @@ const styles = StyleSheet.create({
     color: '#2E1404',
     fontWeight: 'bold',
     fontSize: 12,
+    height: 14,
   },
   verifyButtonTextSent: {
     color: '#BDBDBD',
@@ -518,7 +532,7 @@ const styles = StyleSheet.create({
   carrierContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 0,
   },
   carrierSelector: {
     flexDirection: 'row',
@@ -527,7 +541,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#BDBDBD',
     borderRadius: 8,
-    paddingVertical: 20,
+    marginTop: 0,
+    marginBottom: 4,
+    paddingVertical: 16,
     paddingHorizontal: 16,
     minWidth: 80,
     justifyContent: 'space-between',
@@ -539,7 +555,7 @@ const styles = StyleSheet.create({
   },
   verificationContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     margin: 0,
   },
   verificationCheckbox: {
@@ -644,7 +660,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   carrierOption: {
-    paddingVertical: 16,
+    paddingVertical: 10,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
