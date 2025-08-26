@@ -217,8 +217,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     }
   };
 
-
-
   return (
     <ScrollView contentContainerStyle={common.container}>
       <RegisterHeader title="회원가입" step={1} onBack={() => {
