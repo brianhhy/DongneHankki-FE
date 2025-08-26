@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { signupAPI, SignupRequest } from '../services/SignupAPI';
+import { useAuthStore } from '../../../shared/store/authStore';
 
 export interface SignupFormData {
   id: string;
@@ -25,6 +26,7 @@ export function validateSignup(data: SignupFormData): string | null {
 }
 
 export const useSignup = (navigation: NativeStackNavigationProp<any>) => {
+  const { setUserInfo } = useAuthStore();
   const [formData, setFormData] = useState<SignupFormData>({
     id: '',
     password: '',
@@ -68,6 +70,13 @@ export const useSignup = (navigation: NativeStackNavigationProp<any>) => {
       const response = await signupAPI(signupData, formData.userType);
       
       if (response.status === 'success') {
+        // 회원가입 성공 시 전역 상태에 사용자 정보 저장
+        setUserInfo({
+          role: formData.userType === 'owner' ? 'owner' : 'customer',
+          userId: response.data?.userId || formData.id,
+          loginId: formData.id,
+        });
+        
         navigation.navigate('RegisterComplete');
       } else {
         throw new Error(response.message || '회원가입에 실패했습니다.');
