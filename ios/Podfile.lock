@@ -1363,6 +1363,30 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-geolocation-service (5.3.1):
     - React
+  - react-native-image-picker (8.2.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-maps (1.24.3):
     - react-native-maps/Maps (= 1.24.3)
   - react-native-maps/Generated (1.24.3):
@@ -1910,7 +1934,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated (3.19.1):
+  - RNReanimated (3.18.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1933,10 +1957,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.19.1)
-    - RNReanimated/worklets (= 3.19.1)
+    - RNReanimated/reanimated (= 3.18.0)
+    - RNReanimated/worklets (= 3.18.0)
     - Yoga
-  - RNReanimated/reanimated (3.19.1):
+  - RNReanimated/reanimated (3.18.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1959,9 +1983,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.19.1)
+    - RNReanimated/reanimated/apple (= 3.18.0)
     - Yoga
-  - RNReanimated/reanimated/apple (3.19.1):
+  - RNReanimated/reanimated/apple (3.18.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1985,7 +2009,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.19.1):
+  - RNReanimated/worklets (3.18.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2008,9 +2032,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/worklets/apple (= 3.19.1)
+    - RNReanimated/worklets/apple (= 3.18.0)
     - Yoga
-  - RNReanimated/worklets/apple (3.19.1):
+  - RNReanimated/worklets/apple (3.18.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2155,6 +2179,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -2287,6 +2312,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
@@ -2416,6 +2443,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: fae8da2c01aeb7f26ad739731b6dba61fd02fd97
   React-microtasksnativemodule: 20454ffccff553f0ee73fd20873aa8555a5867fb
   react-native-geolocation-service: 32b2c2a3b91e70ce2a8d0c684801aaeb0a07e0ec
+  react-native-image-picker: db0b3e3c7ae57680876318d4f42e7dbedd72244a
   react-native-maps: a48f905ccf2048f130c0a55996880d479299bc1c
   react-native-safe-area-context: 5594ec631ede9c311c5c0efa244228eff845ce88
   react-native-webview: 85c8fc8ca09f4e67b68afbc86207a1442af5dc80
@@ -2454,7 +2482,7 @@ SPEC CHECKSUMS:
   RNCCheckbox: 33b44487ca8008394ce658cc32b26eab04f426ef
   RNGestureHandler: 9205e0a9649ef6fcfd71e86992ecfb21eefab3d3
   RNKeychain: 943b4dbceef4b3a310c9122c99d1e5b0bd66b9f3
-  RNReanimated: 730ffe6cf7b931f78b795e6b6e0920dcab9c8beb
+  RNReanimated: 722d67dfde539bfe29b572878f4bc805f727726b
   RNScreens: 482e9707f9826230810c92e765751af53826d509
   RNVectorIcons: 941a39b5d3b9d8cf8ac2e2fc09b07bfafbcf9796
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
