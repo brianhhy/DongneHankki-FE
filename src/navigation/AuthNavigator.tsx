@@ -15,9 +15,9 @@ export type AuthStackParamList = {
   Login: undefined;
   StartRegister: undefined;
   Register: undefined;
-  UserTypeSelection: { id: string; password: string; name: string; phone: string };
-  OwnerRegister: { id: string; password: string; name: string; phone: string; userType: 'owner' };
-  ConsumerRegister: { id: string; password: string; name: string; phone: string; userType: 'consumer' };
+  UserTypeSelection: { id: string; password: string; name: string; phone: string; birth: string };
+  OwnerRegister: { id: string; password: string; name: string; phone: string; birth: string; userType: 'owner' };
+  ConsumerRegister: { id: string; password: string; name: string; phone: string; birth: string; userType: 'consumer' };
   RegisterTerms: {
     id: string;
     password: string;
@@ -28,6 +28,7 @@ export type AuthStackParamList = {
     address?: string;
     addressDetail?: string;
     storeName?: string;
+    birth: string;
   };
   RegisterComplete: undefined;
 };
