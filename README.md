@@ -1,6 +1,6 @@
 ![Image](https://github.com/user-attachments/assets/08441c05-696d-48bd-8f78-9cc2e2b9dfa8)
 
-# DongneHankki-BE 
+# DongneHankki-FE
 
 ### 우리 동네의 맛집을 공유하고 추천받는 소셜 다이닝 서비스 '동네한끼' 
 
@@ -84,7 +84,7 @@
 - **분석**: 사용자 활동 로그를 기록하여 해당 가게에 적절한 AI 마케팅 리포트를 생성해줍니다.
 
 ## 🛠️ 기술 스택
-
+- **Frontend**: TypeScript, React Native, Zustand, Css in Js
 - **Backend**: Java, Spring Boot, Spring Security, JPA (Hibernate)
 - **Database**: Redis, MySQL
 - **Cloud & DevOps**: AWS S3, Docker, GitHub Actions
@@ -114,10 +114,6 @@
 
 <br>
 
-# 🗺️ 시스템 아키텍처
-![아키텍처](./Docs/img/system.png)
-<br>
-
 
 # 👧‍👦 팀 소개
 
@@ -126,8 +122,8 @@
 |:------:|:------:|-------------|---------------------------------|
 |   개발   |  정소현   | 💻 백엔드      | API 구현                          |
 |   개발   |  박준서   | 💻 백엔드      | 유저, 게시글, 유저 행위 분석 API 개발, 서버 배포 |
-|   개발   |  황호연   | 📱  프론트엔드   |                                 |
-|   개발   |  황혜성   | 📱  프론트엔드   |                                 |
+|   개발   |  황호연   | 📱  프론트엔드   | 지도 페이지, 추천 페이지, SNS 페이지 개발      |
+|   개발   |  황혜성   | 📱  프론트엔드   | 로그인 페이지, SNS 페이지 개발               |
 |  디자인   |  권예경   | 📱  앱,웹 디자인 |                                 |
 
 <br>
